@@ -31,7 +31,6 @@ How:
 - Playing Atari with Deep Reinforcement Learning
 - Human-level control through deep reinforcement learning（进阶版本）
 
-
 DQN算法由以下几部分构成：
 - 基本的Q learning
 - 经验回放       
@@ -49,7 +48,33 @@ DQN算法由以下几部分构成：
 
 ### Tool
 #### gym
+安装atari game   
+`pip install 'gym[atari]' ` with zsh      
 
+常用的方法：    
+step(action): 用于和环境交互，返回采取该动作时环境的observation，reward 以及done(done等于True时表示这个episode结束了)和info   
+reset(): 返回初始的observation   
+render(): 可视化游戏环境     
+close(): 关闭可视化    
 
+重要属性：   
+action_space   
+observation_space     
 
+基本框架：   
+<code><pre>
+import gym
 
+env = gym.make('CartPole-v0')
+for i_episode in range(20):
+    observation = env.reset()
+    for t in range(100):
+        env.render()
+        print(observation)
+        action = env.action_space.sample()
+        observation, reward, done, info = env.step(action)
+        if done:
+            print("Episode finished after {} timesteps".format(t+1))
+            break
+env.close()
+</code></pre>
