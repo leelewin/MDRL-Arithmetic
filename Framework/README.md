@@ -21,6 +21,34 @@ tensorflow的优化器
 
 Tensorboard 可视化    
 在代码中加入视图框架后，就可以在终端执行`tensorboard --logdir logs`
-然后在浏览器输入网址：http://localhost:6006/
+然后在浏览器输入网址：http://localhost:6006/    
+
+还可以可视化训练过程，添加图表曲线等
 
 ### pytorch
+<code><pre>
+from torch.optim as Optimizer                       #Pytorch中优化器接口
+from torch import nn                                #Pytorch中神经网络模块化接口
+
+Class XXmodel(nn.Module) :                          #nn.Module所有网络的基类
+  def init(self,~):
+     #在这里设计模型结构
+  def forward(self, input) :
+     #在这里计算一次前向传播结果 
+      
+optimizer = Optimizer.XXX()                          #这里是实例化一个optimizer，也可以是自己定义的一个继承了Optimizer的Class
+
+optimizer.zero_grad()                                #梯度清零
+
+input = torch.tensor( data , dtype = torch.xxdtype)  #把数据转换成tensor
+
+model = XXmodel()                                    #实例化网络模型
+
+ouput = model(input)                                 #一次前向传播
+
+loss = loss_fn(output, target)                       #计算损失
+
+optimizer.backward(loss)                                      #计算梯度
+
+optimizer.step()                                     #一次梯度下降
+</code></pre>
