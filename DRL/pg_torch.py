@@ -10,12 +10,20 @@ class Net(torch.nn.Module):
         self.fc1 = torch.nn.Linear(n_feature, n_hiden)
         self.fc2 = torch.nn.Linear(n_hiden, n_outer)
 
+        self.norm_layer(self.fc1)
+        self.norm_layer(self.fc2, std=0.01)
+
     def forward(self, x):
         x = torch.tanh(self.fc1(x))
         x = self.fc2(x)
         x = F.softmax(x)
         action_distribution = torch.distributions.Categorical(probs=x)
         return action_distribution 
+
+    @staticmethod
+    def norm_layer(layer, std=1.0, bias_constant=0.0):
+        torch.nn.init.orthogonal_(layer.weight, std)
+        torch.nn.init.constant_(layer.bias, bias_constant)
 
 
 class PolicyGradient:
@@ -72,13 +80,14 @@ class PolicyGradient:
         loss.backward()
         self.optimizer.step()
         # self.optimizer.zero_grad()
+        reward_sum = torch.sum(torch.tensor(discounted_rewards).float())
 
         #清空回合的data
         self.observation_store = []
         self.action_store = []
         self.reward_store = []
 
-        return loss
+        return reward_sum 
 
     def _reward_to_go(self):
         discounted_rewards = np.zeros_like(self.reward_store)
