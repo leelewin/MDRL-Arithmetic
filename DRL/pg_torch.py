@@ -8,14 +8,17 @@ class Net(torch.nn.Module):
     def __init__(self, n_feature, n_hiden, n_outer):
         super(Net, self).__init__()
         self.fc1 = torch.nn.Linear(n_feature, n_hiden)
-        self.fc2 = torch.nn.Linear(n_hiden, n_outer)
+        self.fc2 = torch.nn.Linear(n_hiden, n_hiden)
+        self.fc3 = torch.nn.Linear(n_hiden, n_outer)
 
         self.norm_layer(self.fc1)
-        self.norm_layer(self.fc2, std=0.01)
+        self.norm_layer(self.fc2, std=0.1)
+        self.norm_layer(self.fc3, std=0.1)
 
     def forward(self, x):
         x = torch.tanh(self.fc1(x))
-        x = self.fc2(x)
+        x = torch.tanh(self.fc2(x))
+        x = self.fc3(x)
         x = F.softmax(x)
         action_distribution = torch.distributions.Categorical(probs=x)
         return action_distribution 

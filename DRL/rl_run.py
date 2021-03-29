@@ -23,9 +23,9 @@ env.seed(1)
 # print(env.action_space)
 # print(env.observation_space.shape[0])
 rl = PolicyGradient(env.action_space.n, env.observation_space.shape[0], learning_rate=0.01)
-loss_list = []
+rewards_list = []
 
-for i_episode in range(100):
+for i_episode in range(2000):
     observation = env.reset()
     while True:
         env.render()
@@ -40,19 +40,19 @@ for i_episode in range(100):
 
         if done:
             #一个回合结束后，进行更新
-            loss = rl.learn()
+            reward_sum = rl.learn()
             # print(sum(vt))
             # if i_episode == 0:
             #     plt.plot(vt)
             #     plt.show()
-            loss_list.append(loss)
+            rewards_list.append(reward_sum)
             # print(loss, end=",")
                 
             break
 
         observation = observation_
-# plt.plot(loss_list)
-# plt.show()
+plt.plot(rewards_list)
+plt.show()
 env.close()
 
 
